@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+  "name": "aa-torrent-dl",
+  "version": "1.1",
+  "description": "Download from annas-archive.org via qbittorrent.",
+  "homepage_url": "https://github.com",
+  "icons": {
+    "48": "icons/a.svg"
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "aa-torrent-dl@example.org"
+    }
+  },
+
+  "permissions": [
+	  "nativeMessaging",
+	  "activeTab"
+  ],
+
+  "browser_action": {
+    "default_icon": "icons/a.svg"
+  },
+
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
