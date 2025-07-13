@@ -1,0 +1,7 @@
+{
+  "name": "aa_torrent_dl_native",
+  "description": "Communicate with qbittorrent on local network.",
+  "path": "PLACEHOLDER",
+  "type": "stdio",
+  "allowed_extensions": ["aa-torrent-dl@l3mon4.de"]
+}

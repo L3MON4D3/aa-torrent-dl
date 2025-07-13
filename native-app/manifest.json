@@ -1,7 +1,0 @@
-{
-  "name": "aa_torrent_dl_native",
-  "description": "Communicate with qbittorrent on local network.",
-  "path": "/home/simon/projects/annas-archive-torrent/native-app/app.py",
-  "type": "stdio",
-  "allowed_extensions": ["aa-torrent-dl@example.org"]
-}
