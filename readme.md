@@ -1,67 +1,19 @@
-Mechanism:
-* Click on browser extension while on annas-archive site.
-* get website text (firefox has api, for sure), use xpath to get link to
-  torrent-file and filename of book.
-* send native message
-  (https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging)
-  to python program like magazine-downloader, link to torrent and filename
-  (enough for it!)
-  * Substep: create that app, maybe extract logic for making sure some torrent
-    is downloading only that one file.
-    Difficult(maybe!): think about what happens when two active downloads need a
-    file from the same torrent.
-  * native app sends back progress and moves file once completed.
-# Communication protocol
-Send json, utf-8 encoded.
-## extension -> native
-* new file:
-```json
-{
-    "action": "download", // fixed!
+# Motivation
 
-    "target_name": "some-filename.extension",
-    "torrent_link": "asdfasdf.torrent",
-    "torrent_target_file": "filename"
-}
-```
-## native -> extension
-* added download
-```json
-{
-    "notifaction_type": "added",
-    "name": "target_filename.epub"
-}
-```
-* started download
-```json
-{
-    "notifaction_type": "downloading",
-    "name": "target_filename.epub"
-}
-```
-* finished download
-```json
-{
-    "notifaction_type": "finished",
-    "name": "target_filename.epub",
-}
-```
+While the file-downloads on annas-archive.org work fine generally, sometimes
+they take a while, or one has to resort to the links with timeout. That all is
+fine for a free service, but since all data is also available in torrents,
+it can also be retrieved this way (and, by seeding, support their
+infrastructure).
 
-# Testpages
-* https://annas-archive.org/md5/c3a5022d3f084abf62fcf0af584983bf has (extract)
-* https://annas-archive.org/md5/0bac07ed6b9959dbef87e84560250a77 has (extract)
-* https://annas-archive.org/md5/b22b256cc09b1b3d33bf6ef0abc01f12 has multiple
-  Bulk torrent downloads.
-* https://annas-archive.org/md5/e848526f73cf166880fd62b7df3c6c54 256MiB piece-size
-* https://annas-archive.org/md5/fdaca097e1337239b19dcf3d8a8e67cf 256MiB
-  piece-size, good large file.
+# Usage
 
-Some sites don't have a language before the filetype, explicitly filter for ^\.*
+Navigate to the page for any file and simply click the extension-icon.  
+If a download is found, there will be notifications about it being added,
+starting, and finished, if no download is found (can be the case if there is no
+bulk torrent download, or if that torrents is a tar-file and requires
+extraction), there will also be a notification about that.
 
-# Torrent-progress
-Seems like prioritizing only works on a per-piece and not per-block level (in
-libtorrent).
-This means that torrents with pieces that contain multiple files may download
-much more than just the single file that we want :/
-Also, we may see progress on files that weren't even selected, for example if
-the piece starts with them.
+# State
+Right now this is not really usable for anyone but me, paths and domains in
+`native-app/app.py` are hardcoded for my setup.
