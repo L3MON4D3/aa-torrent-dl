@@ -29,7 +29,6 @@
           ${pkgs.zip}/bin/zip -r "$dst/aa-torrent-dl@l3mon4.de.xpi" "$src"/*
         '';
       };
-      native-script = native_script;
       native-app = pkgs.stdenv.mkDerivation {
         pname = "aa-torrent-dl-host";
         version = "0.0.1";
