@@ -25,8 +25,8 @@
           dst="$out/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
           install -d "$dst"
 
-          ${pkgs.tree}/bin/tree $src
-          ${pkgs.zip}/bin/zip -r "$dst/aa-torrent-dl@l3mon4.de.xpi" "$src"/*
+          cd "$src"
+          ${pkgs.zip}/bin/zip -r "$dst/aa-torrent-dl@l3mon4.de.xpi" ./*
         '';
       };
       native-app = pkgs.stdenv.mkDerivation {
