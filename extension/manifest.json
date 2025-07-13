@@ -16,7 +16,8 @@
 
   "permissions": [
 	  "nativeMessaging",
-	  "activeTab"
+	  "activeTab",
+	  "notifications"
   ],
 
   "browser_action": {

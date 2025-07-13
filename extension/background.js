@@ -7,7 +7,31 @@ let port = browser.runtime.connectNative("aa_torrent_dl_native");
 Listen for messages from the app and log them to the console.
 */
 port.onMessage.addListener((response) => {
-  console.log("Received: " + response);
+  if (typeof(response) == "string") {
+    console.log("Received: " + response);
+  } else {
+    title = null
+    message = null
+    if (response.notification_type == "added") {
+      title = "Added download";
+      message = response.name + " has been added to qBittorrent.";
+    }
+    if (response.notification_type == "downloading") {
+      title = "Starting download";
+      message = response.name + " is beginning to download.";
+    }
+    if (response.notification_type == "finished") {
+      title = "Finished download";
+      message = response.name + " has finished downloading.";
+    }
+
+    browser.notifications.create({
+      type: "basic",
+      iconUrl: browser.extension.getURL("icons/a.svg"),
+      title: title,
+      message: message
+    })
+  }
 });
 
 /*
@@ -32,18 +56,26 @@ browser.browserAction.onClicked.addListener(() => {
   executing = browser.tabs.executeScript({
     code: `
     ftype = document.getElementsByClassName("main")[0].children[0].getElementsByClassName("text-sm text-gray-500")[0].textContent.split(", ")[1];
-
     name = document.title.replace(" - Anna’s Archive", "");
 
-    torrentlink = document.evaluate(
-      '//a[contains(text(), "Bulk torrent downloads")]/parent::*//a[contains(text(), ".torrent")]',
-      document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null
-    ).singleNodeValue.href;
-
-    torrentfile = document.evaluate(
+    torrent_description_nodes = document.evaluate(
       '//a[contains(text(), "Bulk torrent downloads")]/parent::*/div',
-      document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null
-    ).singleNodeValue.textContent.match(".*file.“([^”]+)”")[1];
+      document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null
+    )
+
+    torrentfile = null;
+    torrentlink = null;
+    for (let i = 0; i < torrent_description_nodes.snapshotLength; i++) {
+      node = torrent_description_nodes.snapshotItem(i)
+      text = node.textContent
+      if (text.match("\(extract\)"))
+        continue;
+
+      torrentfile = text.match(".*file.“([^”]+)”$")[1]
+      torrentlink = node.childNodes[3].href
+    }
+    if (torrentfile == null)
+      throw new Error("EXTRACT_ONLY_ERR")
 
     res = {target_name: name + ftype, torrent_link: torrentlink, torrent_target_file: torrentfile};
     res
@@ -56,5 +88,18 @@ browser.browserAction.onClicked.addListener(() => {
     msg = res
     console.log("Sending: " + msg);
     port.postMessage(msg);
+  }, (err) => {
+    errmsg = null
+    if (err.message == "EXTRACT_ONLY_ERR")
+      errmsg = "Could not find any torrents on this page, or only torrents that require a full download (tar archive)."
+    else
+      errmsg = "Unknown error while looking for torrent: " + err.msg
+
+    browser.notifications.create({
+      type: "basic",
+      iconUrl: browser.extension.getURL("icons/a.svg"),
+      title: "No viable torrent found on page.",
+      message: errmsg
+    })
   });
 });
