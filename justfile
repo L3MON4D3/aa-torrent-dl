@@ -12,7 +12,7 @@ install_debug_native_app_json:
 	install -m755 "$script"/aa-torrent-native-dl ./generated/script
 	sed -i "s#PLACEHOLDER#$(pwd)/native-app/app.py#" ./generated/script
 	cp ./native-app/aa_torrent_dl_native.json ~/.mozilla/native-messaging-hosts/aa_torrent_dl_native.json
-	sed -i "s#PLACEHOLDER#$(pwd)/build/script#" ~/.mozilla/native-messaging-hosts/aa_torrent_dl_native.json
+	sed -i "s#PLACEHOLDER#$(pwd)/generated/script#" ~/.mozilla/native-messaging-hosts/aa_torrent_dl_native.json
 
 clean:
 	rm ./generated/script

@@ -18,7 +18,7 @@
       extension = pkgs.stdenv.mkDerivation {
         pname = "aa-torrent-dl";
         version = "0.0.3";
-        src = ./build;
+        src = ./generated;
         phases = ["unpackPhase" "installPhase"];
         installPhase = ''
           # fixed string from home-manager.
