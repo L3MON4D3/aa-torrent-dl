@@ -1,11 +1,6 @@
-/*
-On startup, connect to the "ping_pong" app.
-*/
 let port = browser.runtime.connectNative("aa_torrent_dl_native");
 
-/*
-Listen for messages from the app and log them to the console.
-*/
+// log plaintext to console, emit notifications for structured data.
 port.onMessage.addListener((response) => {
   if (typeof(response) == "string") {
     console.log("Received: " + response);
@@ -49,9 +44,8 @@ port.onDisconnect.addListener((port) => {
   }
 });
 
-/*
-When the extension's action icon is clicked, send the app a message.
-*/
+// query torrent-link, torrent-filename, and target-filename from current tab,
+// then send download-command to native app.
 browser.browserAction.onClicked.addListener(() => {
   executing = browser.tabs.executeScript({
     code: `
