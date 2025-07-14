@@ -96,13 +96,14 @@ class TorrentState(Enum):
 
 # not sure about the statuses here..
 def get_torrents(state):
+    filter = None
     match state:
         case TorrentState.Stopped:
-            def filter(state_enum): state_enum.is_stopped
+            filter = lambda state_enum: state_enum.is_stopped  # noqa: E731
         case TorrentState.Downloading:
-            def filter(state_enum): state_enum.is_downloading
+            filter = lambda state_enum: state_enum.is_downloading  # noqa: E731
         case TorrentState.Completed:
-            def filter(state_enum): state_enum.is_complete
+            filter = lambda state_enum: state_enum.is_complete  # noqa: E731
 
     assert filter
     return reduce(
