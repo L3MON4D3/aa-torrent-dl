@@ -1,1 +1,2 @@
+#!/usr/bin/env bash
 /nix/store/g7rlhf2mfd4j4yc2s5jnn235h4vg6vbx-python3-3.13.4-env/bin/python /home/simon/projects/annas-archive-torrent/native-app/app.py

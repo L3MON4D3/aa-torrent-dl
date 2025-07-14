@@ -31,7 +31,7 @@
         phases = ["installPhase"];
         installPhase = ''
           install -d "$out"
-          echo "${pkgs.python3.withPackages (pp: [pp.qbittorrent-api])}/bin/python PLACEHOLDER" > "$out"/aa-torrent-native-dl
+          printf "#!/usr/bin/env bash\n${pkgs.python3.withPackages (pp: [pp.qbittorrent-api])}/bin/python PLACEHOLDER" > "$out"/aa-torrent-native-dl
         '';
       };
       native-app = pkgs.stdenv.mkDerivation {
