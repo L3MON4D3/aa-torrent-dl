@@ -2,3 +2,4 @@
 /extension/.amo-upload-uuid
 /result
 /.env
+/build/
