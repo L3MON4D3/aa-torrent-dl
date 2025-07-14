@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "aa-torrent-dl",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Download from annas-archive.org via qbittorrent.",
   "homepage_url": "https://github.com/L3MON4D3/aa-torrent-dl",
   "icons": {
@@ -10,7 +10,7 @@
 
   "browser_specific_settings": {
     "gecko": {
-      "id": "aa-torrent-dl@example.org"
+      "id": "aa-torrent-dl@l3mon4.de"
     }
   },
 
