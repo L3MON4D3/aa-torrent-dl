@@ -17,16 +17,21 @@
     in {
       extension = pkgs.stdenv.mkDerivation {
         pname = "aa-torrent-dl";
-        version = "0.0.1";
-        src = ./extension;
+        version = "0.0.3";
+        src = ./build;
         phases = ["unpackPhase" "installPhase"];
         installPhase = ''
           # fixed string from home-manager.
           dst="$out/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-          install -d "$dst"
-
-          cd "$src"
-          ${pkgs.zip}/bin/zip -r "$dst/aa-torrent-dl@l3mon4.de.xpi" ./*
+          install -DT "$src/aa-torrent-dl@l3mon4.de.xpi" "$dst/aa-torrent-dl@l3mon4.de.xpi"
+        '';
+      };
+      debug-app = pkgs.stdenv.mkDerivation {
+        name = "debug-app";
+        phases = ["installPhase"];
+        installPhase = ''
+          install -d "$out"
+          echo "${pkgs.python3.withPackages (pp: [pp.qbittorrent-api])}/bin/python PLACEHOLDER" > "$out"/aa-torrent-native-dl
         '';
       };
       native-app = pkgs.stdenv.mkDerivation {
@@ -36,7 +41,6 @@
         src = ./native-app;
 
         installPhase = ''
-          ${pkgs.tree}/bin/tree
           substituteInPlace aa_torrent_dl_native.json \
             --replace PLACEHOLDER ${native_script}/bin/aa-torrent-dl-native
 
@@ -48,5 +52,11 @@
         '';
       };
     }; 
+    devShells.default = pkgs.mkShell {
+      packages = with pkgs; [
+        web-ext
+        just
+      ];
+    };
   });
 }
