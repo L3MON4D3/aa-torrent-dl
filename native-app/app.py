@@ -42,7 +42,7 @@ def getMessage():
 
 client = qbittorrentapi.Client(host="qbittorrent.internal:80")
 target_dir = "/home/simon/Downloads"
-torrent_dir = "/mnt/indigo/mnt/torrent/downloads"
+torrent_dir = "/mnt/indigo/mnt/torrent/downloads/aa-torrent-dl"
 qbt_category = "aa-torrent-dl"
 
 
