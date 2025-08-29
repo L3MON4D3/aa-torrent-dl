@@ -19,7 +19,8 @@ Send json, utf-8 encoded.
 {
     "action": "download", // fixed!
 
-    "target_name": "some-filename.extension",
+    "docname": "some-name",
+    "doctype": "<filetype>",
     "torrent_link": "asdfasdf.torrent",
     "torrent_target_file": "filename"
 }
