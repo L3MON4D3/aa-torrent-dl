@@ -49,7 +49,8 @@ port.onDisconnect.addListener((port) => {
 browser.browserAction.onClicked.addListener(() => {
   executing = browser.tabs.executeScript({
     code: `
-    ftype = document.getElementsByClassName("main")[0].children[0].getElementsByClassName("text-sm text-gray-500")[0].textContent.split(", ")[1];
+    original_fname_split = document.evaluate('/html/body/main/div/div[1]/div[2]', document, null, XPathResult.ANY_UNORDERED_NODE_TYPE, null).singleNodeValue.textContent.split(".")
+    ftype = original_fname_split[original_fname_split.length-1]
     name = document.title.replace(" - Anna’s Archive", "");
 
     torrent_description_nodes = document.evaluate(
@@ -71,7 +72,7 @@ browser.browserAction.onClicked.addListener(() => {
     if (torrentfile == null)
       throw new Error("EXTRACT_ONLY_ERR")
 
-    res = {target_name: name + ftype, torrent_link: torrentlink, torrent_target_file: torrentfile};
+    res = {docname: name, doctype: ftype, torrent_link: torrentlink, torrent_target_file: torrentfile};
     res
     `
   });

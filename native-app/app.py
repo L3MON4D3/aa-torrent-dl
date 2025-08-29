@@ -7,6 +7,7 @@ import re
 import qbittorrentapi
 from functools import reduce
 from enum import Enum
+from slugify import slugify
 
 
 # Encode a message for transmission, given its content.
@@ -114,7 +115,7 @@ def get_torrents(state):
 
 
 class TorrentFile:
-    def __init__(self, torrent_name, filename, targetname):
+    def __init__(self, torrent_name, filename, doctype, docname):
         torrentname_variations = [torrent_name]
         # add variant without leading "r_", "f_", ..., if it exists.
         if re.match(r"^[a-z]_", torrent_name) is not None:
@@ -122,7 +123,7 @@ class TorrentFile:
 
         self.torrent_name_variations = torrentname_variations
         self.fname = filename
-        self.targetname = targetname
+        self.targetname = f"{slugify(docname)}.{doctype}"
 
     # torrentfile as retrieved via client.torrents_files.
     def matches(self, torrentfile):
@@ -167,14 +168,15 @@ def exec_command(command):
         torrent_name = re.match(r".*/([^/]+)\.torrent$", torrent_link).group(1)
 
         torrent_target_file = command["torrent_target_file"]
-        target_name = command["target_name"]
+        docname = command["docname"]
+        doctype = command["doctype"]
         sendMessage(encodeMessage(
-            f"File {target_name} is added by torrent \
+            f"Document {docname} is added by torrent \
                 {torrent_link} - {torrent_target_file}."))
-        notify_torrent_added(target_name)
+        notify_torrent_added(docname)
         add_torrent_paused(torrent_link)
         watch_torrentfiles.append(
-            TorrentFile(torrent_name, torrent_target_file, target_name))
+            TorrentFile(torrent_name, torrent_target_file, doctype, docname))
 
 
 def enable_store_torrent_files(t):

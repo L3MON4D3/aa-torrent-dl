@@ -17,7 +17,7 @@
     in {
       extension = pkgs.stdenv.mkDerivation {
         pname = "aa-torrent-dl";
-        version = "0.0.3";
+        version = "0.0.4";
         src = ./generated;
         phases = ["unpackPhase" "installPhase"];
         installPhase = ''
@@ -31,12 +31,12 @@
         phases = ["installPhase"];
         installPhase = ''
           install -d "$out"
-          printf "#!/usr/bin/env bash\n${pkgs.python3.withPackages (pp: [pp.qbittorrent-api])}/bin/python PLACEHOLDER" > "$out"/aa-torrent-native-dl
+          printf "#!/usr/bin/env bash\n${pkgs.python3.withPackages (pp: [pp.qbittorrent-api pp.python-slugify])}/bin/python PLACEHOLDER" > "$out"/aa-torrent-native-dl
         '';
       };
       native-app = pkgs.stdenv.mkDerivation {
         pname = "aa-torrent-dl-host";
-        version = "0.0.1";
+        version = "0.0.2";
 
         src = ./native-app;
 
