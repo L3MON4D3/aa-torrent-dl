@@ -8,11 +8,12 @@
 
   outputs = { self, flake-utils, ... }@inputs : flake-utils.lib.eachDefaultSystem(system: let
     pkgs = import inputs.nixpkgs-unstable { inherit system; };
+    python_libs = pp: with pp; [pp.qbittorrent-api pp.python-slugify];
   in {
     packages = let
       native_script = pkgs.writers.writePython3Bin
         "aa-torrent-dl-native"
-        {libraries = [pkgs.python3Packages.qbittorrent-api];}
+        {libraries = python_libs pkgs.python3Packages;}
         (builtins.readFile ./native-app/app.py);
     in {
       extension = pkgs.stdenv.mkDerivation {
@@ -31,7 +32,7 @@
         phases = ["installPhase"];
         installPhase = ''
           install -d "$out"
-          printf "#!/usr/bin/env bash\n${pkgs.python3.withPackages (pp: [pp.qbittorrent-api pp.python-slugify])}/bin/python PLACEHOLDER" > "$out"/aa-torrent-native-dl
+          printf "#!/usr/bin/env bash\n${pkgs.python3.withPackages python_libs}/bin/python PLACEHOLDER" > "$out"/aa-torrent-native-dl
         '';
       };
       native-app = pkgs.stdenv.mkDerivation {
