@@ -56,6 +56,8 @@ Send json, utf-8 encoded.
 * https://annas-archive.org/md5/e848526f73cf166880fd62b7df3c6c54 256MiB piece-size
 * https://annas-archive.org/md5/fdaca097e1337239b19dcf3d8a8e67cf 256MiB
   piece-size, good large file.
+* https://annas-archive.org/md5/0c7a9bf1d1f83fe083d18316fe1dd734 does not have a
+  language!
 
 Some sites don't have a language before the filetype, explicitly filter for ^\.*
 

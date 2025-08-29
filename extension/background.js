@@ -49,8 +49,66 @@ port.onDisconnect.addListener((port) => {
 browser.browserAction.onClicked.addListener(() => {
   executing = browser.tabs.executeScript({
     code: `
-    original_fname_split = document.evaluate('/html/body/main/div/div[1]/div[2]', document, null, XPathResult.ANY_UNORDERED_NODE_TYPE, null).singleNodeValue.textContent.split(".")
-    ftype = original_fname_split[original_fname_split.length-1]
+    valid_filetypes = [
+      "pdf",
+      "epub",
+      "zip",
+      "mobi",
+      "fb2",
+      "cbr",
+      "djvu",
+      "cbz",
+      "txt",
+      "azw3",
+      "doc",
+      "lit",
+      "rtf",
+      "rar",
+      "htm",
+      "html",
+      "mht",
+      "docx",
+      "lrf",
+      "jpg",
+      "opf",
+      "chm",
+      "azw",
+      "pdb",
+      "odt",
+      "ppt",
+      "xls",
+      "xlsx",
+      "prc",
+      "tar",
+      "tif",
+      "snb",
+      "updb",
+      "htmlz",
+      "7z",
+      "cb7",
+      "gz",
+      "pptx",
+      "ai"
+    ]
+
+    doc_metadata = document.evaluate('/html/body/main/div/div[1]/div[4]', document, null, XPathResult.ANY_UNORDERED_NODE_TYPE, null).singleNodeValue.innerText.toLowerCase().split(" · ")
+
+    // filetype is either first or second entry.
+    // Usually the language comes first, but some documents don't have a
+    // language associated, in which case the doctype comes first.
+    doc_ft = undefined
+    loop1: for (let md of [doc_metadata[1], doc_metadata[0]]) {
+      for (let ft of valid_filetypes) {
+        if (md == ft) {
+          doc_ft = ft
+          break loop1;
+        }
+      }
+    }
+
+    if (doc_ft == undefined)
+      doc_ft = "dat"
+
     name = document.title.replace(" - Anna’s Archive", "");
 
     torrent_description_nodes = document.evaluate(
@@ -72,7 +130,7 @@ browser.browserAction.onClicked.addListener(() => {
     if (torrentfile == null)
       throw new Error("EXTRACT_ONLY_ERR")
 
-    res = {docname: name, doctype: ftype, torrent_link: torrentlink, torrent_target_file: torrentfile};
+    res = {docname: name, doctype: doc_ft, torrent_link: torrentlink, torrent_target_file: torrentfile};
     res
     `
   });
