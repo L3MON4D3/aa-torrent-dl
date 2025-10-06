@@ -15,10 +15,11 @@
         "aa-torrent-dl-native"
         {libraries = python_libs pkgs.python3Packages;}
         (builtins.readFile ./native-app/app.py);
+      manifest = builtins.fromJSON (builtins.readFile ./extension/manifest.json);
     in {
       extension = pkgs.stdenv.mkDerivation {
         pname = "aa-torrent-dl";
-        version = "0.0.4";
+        version = manifest.version;
         src = ./generated;
         phases = ["unpackPhase" "installPhase"];
         installPhase = ''

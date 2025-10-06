@@ -91,7 +91,7 @@ browser.browserAction.onClicked.addListener(() => {
       "ai"
     ]
 
-    doc_metadata = document.evaluate('/html/body/main/div/div[1]/div[4]', document, null, XPathResult.ANY_UNORDERED_NODE_TYPE, null).singleNodeValue.innerText.toLowerCase().split(" · ")
+    doc_metadata = document.evaluate('/html/body/main/div/div[1]/div[3]', document, null, XPathResult.ANY_UNORDERED_NODE_TYPE, null).singleNodeValue.innerText.toLowerCase().split(" · ")
 
     // filetype is either first or second entry.
     // Usually the language comes first, but some documents don't have a
