@@ -200,8 +200,16 @@ def enable_store_torrent_files(t):
                                 progress of torrent {t.info().progress:.2f}"))
 
 
+# 10 minutes
+torrent_inactive_timeout_s = 60*10.0
+torrent_active_timeout_s = 5.0
+
+# initially there are no torrents to monitor, so we can set a large
+# timeout-length.
+timeoutlen_s = torrent_inactive_timeout_s
+
 while True:
-    r_rdy, _, _ = select.select([sys.stdin], [], [], 5.0)
+    r_rdy, _, _ = select.select([sys.stdin], [], [], timeoutlen_s)
     if len(r_rdy) > 0:
         exec_command(getMessage())
 
@@ -214,3 +222,8 @@ while True:
         t.set_file_prio(t.files(), priority["DoNotDownload"])
         enable_store_torrent_files(t)
         t.resume()
+
+    if len(watch_torrentfiles) == 0:
+        timeoutlen_s = torrent_inactive_timeout_s
+    else:
+        timeoutlen_s = torrent_active_timeout_s
